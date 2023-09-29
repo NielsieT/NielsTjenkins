@@ -28,7 +28,8 @@ pipeline {
             }
             steps {
                 echo 'Deploying to Test Server'
-                bat '"C:\Program Files\PuTTY\pscp.exe" -i "C:\Users\Administrator\NIELSTEST\Documents\Key.ppk" -r ./* username@10.0.0.26:/var/www/html/'
+                bat "\"C:\\Program Files\\PuTTY\\pscp.exe\" -i \"C:\\Users\\Administrator\\NIELSTEST\\Documents\\Key.ppk\" -r ./* student@192.168.29.50:/var/www/html/"
+
 
             }
         }
@@ -40,7 +41,7 @@ pipeline {
                 echo 'Deploying to Production Server'
                 
 
-                bat '"C:\Program Files\PuTTY\pscp.exe" -i "C:\Users\Administrator\NIELSTEST\Documents\Key.ppk" -r ./* student@10.0.0.26:/var/www/html/'
+                bat "\"C:\\Program Files\\PuTTY\\pscp.exe\" -i \"C:\\Users\\Administrator\\NIELSTEST\\Documents\\Key.ppk\" -r ./* student@192.168.29.67:/var/www/html/'
             }
         }
     }
