@@ -10,7 +10,7 @@ pipeline {
         
         stage('Deploy to Test Server') {
             when {
-                expression { currentBuild.rawBuild.getBranch().getName() == 'main' }
+                expression { currentBuild.branchName == 'main' }
             }
             steps {
                 echo 'Deploying to Test Server'
@@ -20,7 +20,7 @@ pipeline {
         
         stage('Deploy to Production Server') {
             when {
-                expression { currentBuild.rawBuild.getBranch().getName() == 'main' }
+                expression { currentBuild.branchName == 'main' }
             }
             steps {
                 echo 'Deploying to Production Server'
