@@ -4,38 +4,60 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                // Checkout your code from your version control system (e.g., Git)
-                checkout scm
+                checkout([$class: 'GitSCM', branches: [[name: 'main']], userRemoteConfigs: [[url: 'https://github.com/NielsTjenkins/Jenkinsfile.git']]])
             }
         }
-        
-        stage('Deploy to Web Server') {
+        stage('Deploy to Test Server') {
+            when {
+                expression { currentBuild.rawBuild.getBranch().getName() == 'main' }
+            }
             steps {
-                script {
-                    def remoteServer = [:]
-                    remoteServer.name = 'WebServer'
-                    remoteServer.host = '192.168.29.50'
-                    remoteServer.user = 'student'
-                    
-                    // Use the Jenkins credential for SSH password
-                    remoteServer.password = credentials('student')
-                    
-                    // Copy your HTML file to the web server directory using SSH
-                    sshPut remote: remoteServer, from: 'index.html', into: '/var/www/html/'
-                }
+                echo 'Deploying to Test Server'
+                pipeline {
+    agent any
+    
+    stages {
+        stage('Checkout') {
+            steps {
+                checkout([$class: 'GitSCM', branches: [[name: 'main']], userRemoteConfigs: [[url: 'https://github.com/NielsTjenkins/Jenkinsfile.git']]])
+            }
+        }
+        stage('Deploy to Test Server') {
+            when {
+                expression { currentBuild.rawBuild.getBranch().getName() == 'main' }
+            }
+            steps {
+                echo 'Deploying to Test Server'
+                bat '"C:\Program Files\PuTTY\pscp.exe" -i "C:\\path\\to\\private-key.ppk" -r ./* username@10.0.0.26:/var/www/html/'
+
+            }
+        }
+        stage('Deploy to Production Server') {
+            when {
+                expression { currentBuild.rawBuild.getBranch().getName() == 'main' }
+            }
+            steps {
+                echo 'Deploying to Production Server'
+                
+
+                bat '"C:\Program Files\PuTTY\pscp.exe" -i "C:\Users\Administrator\NIELSTEST\Documents\Key.ppk" -r ./* student@10.0.0.26:/var/www/html/'
             }
         }
     }
-
-    post {
-        success {
-            // If the deployment is successful, you can perform additional actions here
-            // For example, you might trigger a notification or perform further testing
+}
+'
+            }
         }
+        stage('Deploy to Production Server') {
+            when {
+                expression { currentBuild.rawBuild.getBranch().getName() == 'main' }
+            }
+            steps {
+                echo 'Deploying to Production Server'
+                
 
-        failure {
-            // If the deployment fails, you can perform actions here
-            // For example, you might send a notification or log the failure
+                bat '"C:\Program Files\PuTTY\pscp.exe" -i "C:\Users\Administrator\NIELSTEST\Documents\Key.ppk" -r ./* student@192.168.29.67:/var/www/html/'
+            }
         }
     }
 }
