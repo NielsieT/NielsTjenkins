@@ -10,21 +10,27 @@ pipeline {
         
         stage('Deploy to Test Server') {
             when {
-                expression { env.BRANCH_NAME == 'main' }
+                expression { currentBuild.branchName == 'main' }
             }
             steps {
                 echo 'Deploying to Test Server'
-                bat "\"C:\\Program Files\\PuTTY\\pscp.exe\" -i \"C:\\Users\\Administrator\\NIELSTEST\\Documents\\Key.ppk\" -r ./* student@192.168.29.50:/var/www/html/"
+                script {
+                    // Add the SSH host key for the test server to the known_hosts file
+                    bat 'echo y | "C:\\Program Files\\PuTTY\\pscp.exe" -i "C:\\Users\\Administrator\\NIELSTEST\\Documents\\Key.ppk" -r ./* student@192.168.29.50:/var/www/html/'
+                }
             }
         }
         
         stage('Deploy to Production Server') {
             when {
-                expression { env.BRANCH_NAME == 'main' }
+                expression { currentBuild.branchName == 'main' }
             }
             steps {
                 echo 'Deploying to Production Server'
-                bat "\"C:\\Program Files\\PuTTY\\pscp.exe\" -i \"C:\\Users\\Administrator\\NIELSTEST\\Documents\\Key.ppk\" -r ./* student@192.168.29.67:/var/www/html/"
+                script {
+                    // Add the SSH host key for the production server to the known_hosts file
+                    bat 'echo y | "C:\\Program Files\\PuTTY\\pscp.exe" -i "C:\\Users\\Administrator\\NIELSTEST\\Documents\\Key.ppk" -r ./* student@192.168.29.67:/var/www/html/'
+                }
             }
         }
     }
