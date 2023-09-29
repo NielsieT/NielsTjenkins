@@ -1,29 +1,41 @@
 pipeline {
     agent any
-
+    
     stages {
         stage('Checkout') {
             steps {
-                // Haal de openbare Git-repository op
-                git branch: 'main', url: 'https://github.com/NielsieT/NielsTjenkins.git'
+                // Checkout your code from your version control system (e.g., Git)
+                checkout scm
             }
         }
-
-        stage('Deploy to Test Apache') {
+        
+        stage('Deploy to Web Server') {
             steps {
-                // Kopieer het HTML-bestand naar de test-Apache-webserver
-                sh 'cp NielsTjenkins/index.html /var/www/test-html/'
-            }
-        }
-
-        stage('Deploy to Main Webserver') {
-            steps {
-                // Verplaats het HTML-bestand van de test-Apache-webserver naar de hoofdwebserver
-                sh 'mv /var/www/test-html/je-html-bestand.html /var/www/html/'
+                script {
+                    def remoteServer = [:]
+                    remoteServer.name = 'WebServer'
+                    remoteServer.host = '192.168.29.50'
+                    remoteServer.user = 'student'
+                    
+                    // Use the Jenkins credential for SSH password
+                    remoteServer.password = credentials('student')
+                    
+                    // Copy your HTML file to the web server directory using SSH
+                    sshPut remote: remoteServer, from: 'index.html', into: '/var/www/html/'
+                }
             }
         }
     }
 
     post {
         success {
-            // Als de
+            // If the deployment is successful, you can perform additional actions here
+            // For example, you might trigger a notification or perform further testing
+        }
+
+        failure {
+            // If the deployment fails, you can perform actions here
+            // For example, you might send a notification or log the failure
+        }
+    }
+}
