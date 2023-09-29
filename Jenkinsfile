@@ -10,7 +10,7 @@ pipeline {
         
         stage('Deploy to Test Server') {
             when {
-                expression { currentBuild.branchName == 'main' }
+                expression { env.BRANCH_NAME == 'main' }
             }
             steps {
                 echo 'Deploying to Test Server'
@@ -20,7 +20,7 @@ pipeline {
         
         stage('Deploy to Production Server') {
             when {
-                expression { currentBuild.branchName == 'main' }
+                expression { env.BRANCH_NAME == 'main' }
             }
             steps {
                 echo 'Deploying to Production Server'
