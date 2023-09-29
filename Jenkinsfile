@@ -1,28 +1,29 @@
-pipeline { agent any
+pipeline {
+    agent any
 
-stages {
-    stage('Build') {
-        steps {
-            echo 'Building...'
+    stages {
+        stage('Checkout') {
+            steps {
+                // Haal de openbare Git-repository op
+                git branch: 'main', url: 'https://github.com/NielsieT/NielsTjenkins.git'
+            }
+        }
+
+        stage('Deploy to Test Apache') {
+            steps {
+                // Kopieer het HTML-bestand naar de test-Apache-webserver
+                sh 'cp NielsTjenkins/index.html /var/www/test-html/'
+            }
+        }
+
+        stage('Deploy to Main Webserver') {
+            steps {
+                // Verplaats het HTML-bestand van de test-Apache-webserver naar de hoofdwebserver
+                sh 'mv /var/www/test-html/je-html-bestand.html /var/www/html/'
+            }
         }
     }
-    stage('Dev environment') {
-        steps {
-            input 'Do you approve deployment?'
-            echo 'Hello Dev'
-        }
-    }
-    stage('Beta environment') {
-        steps {
-            input 'Do you approve deployment?'
-            echo 'Hello beta'
-        }
-    }
-    stage('Production environment') {
-        steps {
-            input 'Do you approve deployment?'
-            echo 'Hello Prod'
-        }
-    }
-}
-}
+
+    post {
+        success {
+            // Als de
