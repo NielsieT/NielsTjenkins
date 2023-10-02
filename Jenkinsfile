@@ -4,6 +4,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
+                // Replace 'https://github.com/NielsieT/NielsTjenkins.git' with your Git repository URL
                 git branch: 'main', url: 'https://github.com/NielsieT/NielsTjenkins.git'
             }
         }
@@ -15,10 +16,8 @@ pipeline {
                 echo 'Deploying to ProgramData'
                 // Copy all files to ProgramData directory
                 bat """
-                xcopy *.html "C:/ProgramData/Jenkins/.jenkins/workspace/Nielsie123321_main/" /E /Y /EXCLUDE:exclude.txt
+                xcopy *.html "C:/ProgramData/Jenkins/.jenkins/workspace/Nielsie123321_main/" /E /Y
                 """
-
-
             }
         }
         stage('Deploy to Apache Web Server') {
@@ -28,9 +27,10 @@ pipeline {
             steps {
                 echo 'Deploying to Apache Web Server'
 
-                // Copy all files from ProgramData to Apache web server directory
-                bat '"C:\\Program Files\\PuTTY\\pscp.exe" -i "C:\\Program Files\\Key.ppk" -r "C:\\ProgramData\\Jenkins\\.jenkins\\workspace\\Nielsie123321_main*.html\\" student@192.168.29.67:/var/www/html/'
+                
+                bat '"C:\\Program Files\\PuTTY\\pscp.exe" -i "C:\\Program Files\\Key.ppk" -r "C:\\ProgramData\\Jenkins\\.jenkins\\workspace\\Nielsie123321_main\\*.html" student@192.168.29.67:/var/www/html/'
             }
         }
     }
 }
+ 
