@@ -4,15 +4,9 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                script {
-                    def branchName = currentBuild.rawBuild.getEnvironment().get('BRANCH_NAME')
-                    if (branchName == 'main') {
-                        checkout scm
-                    }
-                }
+                git branch: 'main', url: 'https://github.com/NielsieT/NielsTjenkins.git'
             }
         }
-        
         stage('Deploy to ProgramData') {
             when {
                 expression { currentBuild.rawBuild.getEnvironment().get('BRANCH_NAME') == 'main' }
