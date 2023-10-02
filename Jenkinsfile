@@ -15,8 +15,9 @@ pipeline {
                 echo 'Deploying to ProgramData'
                 // Copy all files to ProgramData directory
                 bat """
-                xcopy *.html "C:/ProgramData/Jenkins/.jenkins/workspace/Nielsie123321_main/" /E /Y
+                xcopy *.html "C:/ProgramData/Jenkins/.jenkins/workspace/Nielsie123321_main/" /E /Y /EXCLUDE:exclude.txt
                 """
+
 
             }
         }
