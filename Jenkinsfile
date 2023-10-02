@@ -4,12 +4,18 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git branch: 'main', url: 'https://github.com/NielsieT/NielsTjenkins.git'
+                script {
+                    def branchName = currentBuild.rawBuild.getEnvironment().get('BRANCH_NAME')
+                    if (branchName == 'main') {
+                        checkout scm
+                    }
+                }
             }
         }
+        
         stage('Deploy to ProgramData') {
             when {
-                expression { currentBuild.rawBuild.getBranch().getName() == 'main' }
+                expression { currentBuild.rawBuild.getEnvironment().get('BRANCH_NAME') == 'main' }
             }
             steps {
                 echo 'Deploying to ProgramData'
