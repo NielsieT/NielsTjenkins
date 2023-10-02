@@ -4,33 +4,24 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                checkout([$class: 'GitSCM', branches: [[name: 'main']], userRemoteConfigs: [[url: 'https://github.com/NielsieT/NielsTjenkins.git']]])
-            }
-        }
-        
-        stage('Deploy to Test Server') {
-            when {
-                expression { env.BRANCH_NAME == 'main' }
-            }
-            steps {
-                echo 'Deploying to Test Server'
+                // Checkout code from the 'main' branch
                 script {
-                    // Add the SSH host key for the test server to the known_hosts file
-                    bat 'echo y | "C:\Program Files\pscp.exe" -i "C:\\Users\\Administrator\\NIELSTEST\\Documents\\Key.ppk" -r ./* student@192.168.29.67:/var/www/html/'
+                    def scmVars = checkout([
+                        $class: 'GitSCM',
+                        branches: [[name: 'main']],
+                        userRemoteConfigs: [[url: 'https://github.com/NielsieT/NielsTjenkins.git']]
+                    ])
                 }
             }
         }
         
-        stage('Deploy to Production Server') {
+        stage('Deploy to Server') {
             when {
-                expression { env.BRANCH_NAME == 'main' }
+                expression { currentBuild.rawBuild.getEnvironment().get('BRANCH_NAME') == 'main' }
             }
             steps {
-                echo 'Deploying to Production Server'
-                script {
-                    // Add the SSH host key for the production server to the known_hosts file
-                    bat 'echo y | "C:\Program Files\pscp.exe" -i "C:\\Users\\Administrator\\NIELSTEST\\Documents\\Key.ppk" -r ./* student@192.168.29.50:/var/www/html/'
-                }
+                echo 'Copying HTML files to the server'
+                bat 'echo y | pscp -pw student "${WORKSPACE}/*.html" student@192.168.29.67:/var/www/html/'
             }
         }
     }
