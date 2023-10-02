@@ -14,7 +14,7 @@ pipeline {
             }
             steps {
                 echo 'Copying HTML files to the production server'
-                bat 'echo y | pscp -pw student "C:\\Program Files\\Jenkins\\Multipipeline\\*.html" student@192.168.29.67:/var/www/html/'
+                bat 'echo y | pscp -pw student "C:\\Programdata\\Jenkins\\.jenkins\\workspace\\Nielsie123321\\*.html" student@192.168.29.67:/var/www/html/'
             }
         }
     }
