@@ -4,24 +4,17 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                // Checkout code from the 'main' branch
-                script {
-                    def scmVars = checkout([
-                        $class: 'GitSCM',
-                        branches: [[name: 'main']],
-                        userRemoteConfigs: [[url: 'https://github.com/NielsieT/NielsTjenkins.git']]
-                    ])
-                }
+                git branch: 'main', url: 'https://github.com/Wepsel/html3.git'
             }
         }
         
-        stage('Deploy to Server') {
+        stage('Deploy to Production Server') {
             when {
                 expression { currentBuild.rawBuild.getEnvironment().get('BRANCH_NAME') == 'main' }
             }
             steps {
-                echo 'Copying HTML files to the server'
-                bat 'echo y | pscp -pw student "${WORKSPACE}/*.html" student@192.168.29.67:/var/www/html/'
+                echo 'Copying HTML files to the production server'
+                bat 'echo y | pscp -pw student "C:\\Program Files\\Jenkins\\Multipipeline\\*.html" student@10.0.0.26:/var/www/html/'
             }
         }
     }
