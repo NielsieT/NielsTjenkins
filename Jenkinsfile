@@ -14,7 +14,7 @@ pipeline {
             steps {
                 echo 'Deploying to ProgramData'
                 // Copy all files to ProgramData directory
-                xcopy *.html "C:\ProgramData\Jenkins\.jenkins\workspace\Nielsie123321_main\" /E /Y'
+                bat 'xcopy *.html "C:\ProgramData\Jenkins\.jenkins\workspace\Nielsie123321_main\" /E /Y'
             }
         }
         stage('Deploy to Apache Web Server') {
