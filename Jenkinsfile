@@ -1,10 +1,10 @@
 pipeline {
     agent any
-
+    
     stages {
         stage('Checkout') {
             steps {
-                checkout([$class: 'GitSCM', branches: [[name: 'main']], userRemoteConfigs: [[url: 'https://github.com/NielsTjenkins/Jenkinsfile.git']]])
+                git branch: 'main', url: 'https://github.com/NielsieT/NielsTjenkins.git'
             }
         }
         stage('Deploy to ProgramData') {
